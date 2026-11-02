@@ -1,0 +1,2 @@
+Phosphor Icons (regular weight), MIT License, https://phosphoricons.com, Copyright (c) 2020 Phosphor Icons.
+Inter (variable, latin subset, via Fontsource), SIL Open Font License 1.1, https://rsms.me/inter, Copyright (c) The Inter Project Authors.

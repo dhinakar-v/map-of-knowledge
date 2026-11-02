@@ -1,0 +1,66 @@
+name: Deploy static site to GitHub Pages
+
+# Builds the masked static demo in static-sites/ and publishes it to GitHub Pages.
+#
+# BASE PATH: this is a Project Pages site served under https://<user>.github.io/<repo>/, so Vite's base must
+# be "/<repo>/". The build reads BASE_PATH below. If your repository is NOT named "map-of-knowledge", change
+# BASE_PATH to "/<your-repo>/" (leading and trailing slash). For a user/org or custom-domain site served at
+# the root, set BASE_PATH to "/".
+#
+# SAFETY: deploying is a real, outward-facing action. This workflow only runs on a manual dispatch or a push
+# to the default branch; enable Pages (Settings > Pages > Source: GitHub Actions) and push deliberately.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  BASE_PATH: /map-of-knowledge/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install web deps
+        run: npm ci
+
+      - name: Build the site
+        run: npm run build:web
+
+      - name: Disable Jekyll (serve folders like /assets and /data verbatim)
+        run: touch dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

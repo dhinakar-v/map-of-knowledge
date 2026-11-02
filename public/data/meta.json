@@ -1,0 +1,1 @@
+{"accounts": ["acme-health"], "colours": {"account": "#E03131", "department": "#C2255C", "project": "#FAB005", "stakeholder": "#1C7ED6", "team": "#2B8A3E", "person": "#37B24D", "outcome": "#7048E8", "lesson": "#F76707", "proposal": "#0CA678", "document": "#868E96"}, "defaultAccount": "acme-health"}
